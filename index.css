@@ -1,0 +1,721 @@
+/* ==========================================================================
+   Fanny Ice Cream - Simplified Lucky Wheel Banner Stylesheet (300x250)
+   ========================================================================== */
+
+/* --- Styling Variables --- */
+:root {
+    --primary-red: #c00a0a;
+    --gold: #dfb238;
+    --gold-light: #fff3ab;
+    --gold-gradient: linear-gradient(135deg, #ffe885 0%, #e2b339 50%, #9e7511 100%);
+    --bg-dark: #120101;
+    --white: #ffffff;
+}
+
+/* --- Basic Reset & Centering --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #1a1a1a; /* Dark background to highlight the banner */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* --- 300x250 Banner Container --- */
+.banner-container {
+    width: 300px;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Base layer stacking rule */
+.banner-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 250px;
+    pointer-events: none;
+    object-fit: cover;
+}
+
+/* 1. Background image */
+.bg-img {
+    z-index: 1;
+}
+
+/* 2. Rays glow - placed right on top of the wheel for a premium stationary light effect */
+.quat-img {
+    z-index: 4;
+    transform-origin: 243px 190px;
+    animation: lights-glow 2s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+    opacity: 0.95;
+}
+
+/* 3. The Wheel Wrapper & Image */
+.wheel-wrapper {
+    position: absolute;
+    left: 121px; /* 243 (center) - 122 (half-width) */
+    top: 68px;   /* 190 (center) - 122 (half-height) */
+    width: 244px;
+    height: 244px;
+    z-index: 3;
+    transform-origin: center center;
+    transition: transform 0.1s ease-out;
+}
+
+.wheel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Wheel idle spin during waiting state (clockwise, synchronized with gifts) */
+.wheel-wrapper.idle-spin {
+    animation: wheel-idle 8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+/* 4. Alternating Gifts overlay - fades in and out while text remains visible */
+.gifts-img {
+    z-index: 4;
+    width: 241px;
+    height: 225px;
+    left: auto;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.85) translateY(10px);
+    animation: alternate-gifts 8s ease-in-out infinite;
+}
+
+/* 5. Pointer and Center Quay Button overlay */
+.pointer-img {
+    z-index: 5;
+    mix-blend-mode: normal;
+}
+
+/* 6. Logo (top-left) */
+.logo-img {
+    z-index: 6;
+}
+
+/* 7. Title text (top-center/right) */
+.title-img {
+    z-index: 7;
+}
+
+/* 8. Promotional Text overlay (middle-left) - stays visible and wiggles */
+.text-img {
+    z-index: 8;
+    animation: text-wiggle 6s ease-in-out infinite;
+    transform-origin: 75px 125px; /* local center */
+}
+
+/* 9. CTA button overlay (bottom-left) - wiggles */
+.cta-img {
+    z-index: 9;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    animation: cta-wiggle 6s ease-in-out infinite 1.5s;
+    transform-origin: 80px 208px; /* local center */
+}
+
+/* --- Invisible Interactive Triggers & Hover Shake --- */
+.interactive-trigger {
+    position: absolute;
+    z-index: 15;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Spin Trigger: Center of the Wheel (X=243, Y=190, diameter ~44px) */
+.spin-trigger {
+    left: 221px;
+    top: 168px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+
+.spin-trigger:hover {
+    transform: scale(1.15);
+}
+
+/* CTA Trigger: "THAM GIA NGAY" button (X=23..136, Y=195..222) */
+.cta-trigger {
+    left: 23px;
+    top: 195px;
+    width: 113px;
+    height: 27px;
+    border-radius: 14px;
+}
+
+/* When hovering over the banner container, trigger fast vibration on text and CTA button! */
+.banner-container:hover .cta-img {
+    animation: cta-vibrate-fast 0.3s linear infinite !important;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.95));
+}
+
+.banner-container:hover .text-img {
+    animation: text-vibrate-fast 0.3s linear infinite !important;
+}
+
+/* Override animations while spinning the wheel to keep gifts hidden */
+.banner-container.spinning .gifts-img {
+    animation: none;
+    opacity: 0;
+    transform: scale(0.85) translateY(10px);
+}
+
+/* Banner Confetti Canvas */
+#banner-confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 12;
+    pointer-events: none;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes spin-glow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Pulsating golden glow for stationary wheel border lights */
+@keyframes lights-glow {
+    0% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 1px rgba(255, 230, 100, 0.4));
+    }
+    100% {
+        opacity: 1;
+        filter: drop-shadow(0 0 6px rgba(255, 230, 100, 0.9));
+    }
+}
+
+@keyframes wheel-idle {
+    0% { transform: rotate(0deg); }
+    45%, 100% { transform: rotate(360deg); }
+}
+
+/* Idle Wiggle for Text */
+@keyframes text-wiggle {
+    0%, 75%, 100% { transform: scale(1) rotate(0deg); }
+    78% { transform: scale(1) rotate(-1.5deg) translate(-1px, 0px); }
+    81% { transform: scale(1.02) rotate(1.5deg) translate(1px, -1px); }
+    84% { transform: scale(1) rotate(-1.5deg) translate(-1px, 1px); }
+    87% { transform: scale(1.02) rotate(1deg) translate(1px, 0px); }
+    90% { transform: scale(1) rotate(-0.5deg) translate(-1px, -1px); }
+    93% { transform: scale(1.01) rotate(0.5deg) translate(0px, 1px); }
+    96% { transform: scale(1) rotate(0deg) translate(0px, 0px); }
+}
+
+/* Idle Wiggle for CTA */
+@keyframes cta-wiggle {
+    0%, 75%, 100% { transform: scale(1) rotate(0deg); }
+    78% { transform: scale(1.04) rotate(-2deg); }
+    81% { transform: scale(1.04) rotate(2deg); }
+    84% { transform: scale(1.04) rotate(-2deg); }
+    87% { transform: scale(1.04) rotate(1.5deg); }
+    90% { transform: scale(1.04) rotate(-1deg); }
+    93% { transform: scale(1.02) rotate(0.5deg); }
+    96% { transform: scale(1) rotate(0deg); }
+}
+
+/* Hover fast vibration for CTA */
+@keyframes cta-vibrate-fast {
+    0%, 100% { transform: scale(1.05) translate(0, 0) rotate(0deg); }
+    20% { transform: scale(1.05) translate(-1px, 1px) rotate(-1deg); }
+    40% { transform: scale(1.05) translate(1px, -1px) rotate(1deg); }
+    60% { transform: scale(1.05) translate(-1px, -1px) rotate(-1deg); }
+    80% { transform: scale(1.05) translate(1px, 1px) rotate(1deg); }
+}
+
+/* Hover fast vibration for Text */
+@keyframes text-vibrate-fast {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-1px, 1px) rotate(-0.5deg); }
+    40% { transform: translate(1px, -1px) rotate(0.5deg); }
+    60% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+    80% { transform: translate(1px, 1px) rotate(0.5deg); }
+}
+
+/* Alternate Gifts keyframe: hidden for 0..4s, fades in + floats at 4.5..7.5s, exit scales up & fades out */
+@keyframes alternate-gifts {
+    0%, 45% {
+        opacity: 0;
+        transform: scale(0.8) translateY(15px);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.02) translateY(-6px);
+    }
+    85% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    90% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    96%, 100% {
+        opacity: 0;
+        transform: scale(1.3) translateY(-15px); /* Scales up and fades out! */
+    }
+}
+
+/* --- Winner Modal --- */
+.modal-backdrop {
+    position: absolute; /* Lock inside the banner size, or cover the body? We can cover the body */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background: radial-gradient(circle at top, #970707 0%, #4a0101 100%);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 280px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    transform: scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.show .modal-card {
+    transform: scale(1);
+}
+
+.modal-ribbon {
+    background: var(--gold-gradient);
+    color: var(--bg-dark);
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 4px 15px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.modal-body h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 15px;
+}
+
+.prize-display {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(223, 178, 56, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.prize-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    text-shadow: 0 0 5px rgba(223, 178, 56, 0.3);
+}
+
+.primary-btn {
+    background: var(--gold-gradient);
+    border: none;
+    color: var(--bg-dark);
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(223, 178, 56, 0.3);
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(223, 178, 56, 0.5);
+}
+
+/* ==========================================================================
+   New Premium Upgrades: History Button, History Panel, Modal Forms & Steps
+   ========================================================================== */
+
+/* 10. Floating History Button */
+.floating-history-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    z-index: 20;
+    background: rgba(18, 1, 1, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(223, 178, 56, 0.5);
+    color: var(--gold-light);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.floating-history-btn:hover {
+    background: var(--gold-gradient);
+    color: var(--bg-dark);
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(223, 178, 56, 0.4);
+    transform: translateY(-0.5px);
+}
+
+/* 11. History Panel (Slide-over with glassmorphism) */
+.history-panel {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    z-index: 35;
+    background: radial-gradient(circle at top, rgba(121, 5, 5, 0.98) 0%, rgba(18, 1, 1, 0.99) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    transition: left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.history-panel.show {
+    left: 0;
+}
+
+.history-header {
+    padding: 10px 12px 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(223, 178, 56, 0.2);
+}
+
+.history-header span {
+    font-family: 'Outfit', sans-serif;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.8px;
+}
+
+.history-close-btn {
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.history-close-btn:hover {
+    color: var(--gold-light);
+    transform: scale(1.15);
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+}
+
+/* Custom Sleek Scrollbar for History List */
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.history-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+.no-history {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.65rem;
+    text-align: center;
+    margin-top: 50px;
+    font-style: italic;
+}
+
+.history-item {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(223, 178, 56, 0.15);
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.history-item:hover {
+    border-color: rgba(223, 178, 56, 0.4);
+    transform: translateY(-1px);
+}
+
+.history-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-width: 65%;
+}
+
+.history-item-prize {
+    color: var(--white);
+    font-size: 0.65rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item-date {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.5rem;
+}
+
+.history-item-code {
+    color: var(--gold-light);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    border: 1px dashed rgba(223, 178, 56, 0.6);
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(223, 178, 56, 0.08);
+    text-transform: uppercase;
+}
+
+/* 12. Modal Step Management */
+.modal-step {
+    display: none;
+    animation: step-fade-in 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.modal-step.active {
+    display: block;
+}
+
+@keyframes step-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.text-link-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.65rem;
+    text-decoration: underline;
+    margin-top: 10px;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.text-link-btn:hover {
+    color: var(--gold-light);
+}
+
+/* 13. Form Container and Inputs */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+}
+
+.input-group input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(223, 178, 56, 0.25);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.75rem;
+    color: var(--white);
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--gold);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 5px rgba(223, 178, 56, 0.3);
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.error-msg {
+    color: #ff4d4d;
+    font-size: 0.6rem;
+    text-align: left;
+    display: none;
+    margin-top: -2px;
+    margin-left: 2px;
+    animation: shake 0.3s ease;
+}
+
+.error-msg.show {
+    display: block;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* 14. Claim Code and Success Screen */
+.claim-code {
+    color: var(--gold-light);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    border: 1.5px dashed var(--gold);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    display: inline-block;
+    text-shadow: 0 0 8px rgba(223, 178, 56, 0.5);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.success-desc {
+    color: var(--white);
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+}
+
+.success-note {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.55rem;
+    line-height: 1.3;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+/* 15. Success Checkmark Micro-animation */
+.success-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 8px auto;
+}
+
+.checkmark {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 3;
+    stroke: var(--gold);
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px rgba(223, 178, 56, 0.15);
+    animation: check-fill .4s ease-in-out .4s forwards, check-scale .3s ease-in-out .9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke: var(--gold);
+    fill: none;
+    animation: check-stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: check-stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+}
+
+@keyframes check-stroke {
+    100% { stroke-dashoffset: 0; }
+}
+
+@keyframes check-fill {
+    100% { box-shadow: inset 0px 0px 0px 30px rgba(223, 178, 56, 0.1); }
+}
+
+@keyframes check-scale {
+    0%, 100% { transform: none; }
+    50% { transform: scale3d(1.1, 1.1, 1); }
+}

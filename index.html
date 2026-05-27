@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fanny Ice Cream - Du Xuân Paris Banner</title>
+    <!-- Google Fonts: Outfit for premium display, Inter for general text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- The Actual 300x250 Banner Container (Centered on screen) -->
+    <div id="lucky-banner" class="banner-container">
+        <!-- 1. Background Image -->
+        <img src="assets/bg.jpg" alt="Background" class="banner-layer bg-img">
+
+        <!-- 2. Rotating Light Aura Behind Wheel -->
+        <img src="assets/quat.png" alt="Light Rays" class="banner-layer quat-img">
+
+        <!-- 3. The Lucky Wheel -->
+        <div class="wheel-wrapper" id="wheel-wrapper">
+            <img src="assets/vongquay.png" alt="Lucky Wheel" class="wheel-img" id="wheel-element">
+        </div>
+
+        <!-- 4. Floating Gifts Overlay -->
+        <img src="assets/qua.png" alt="Gifts" class="banner-layer gifts-img">
+
+        <!-- 5. Pointer & Center "QUAY" Button -->
+        <img src="assets/muiten.png" alt="Pointer" class="banner-layer pointer-img">
+
+        <!-- 6. Logo (Top Left) -->
+        <img src="assets/logo.png" alt="Fanny Logo" class="banner-layer logo-img">
+
+        <!-- 7. Title (Top Center) -->
+        <img src="assets/title.png" alt="Fanny Du Xuan Paris" class="banner-layer title-img">
+
+        <!-- 8. Campaign Promotional Text (Middle Left) -->
+        <img src="assets/text.png" alt="Quay trung thuong 100%" class="banner-layer text-img">
+
+        <!-- 9. CTA Button "THAM GIA NGAY" (Bottom Left) -->
+        <img src="assets/cta.png" alt="Tham Gia Ngay" class="banner-layer cta-img" id="cta-button-img">
+
+        <!-- Invisible Interactive Triggers for Click & Hover Events -->
+        <div class="interactive-trigger spin-trigger" id="spin-btn" title="Click để QUAY!"></div>
+        <div class="interactive-trigger cta-trigger" id="cta-btn" title="Click để THAM GIA NGAY!"></div>
+
+        <!-- History Panel (Slide-in from left/top to cover with glassmorphism) -->
+        <div class="history-panel" id="history-panel">
+            <!-- <div class="history-header">
+                <span>LỊCH SỬ QUÀ TẶNG</span>
+                <button class="history-close-btn" id="history-close" title="Đóng">&times;</button>
+            </div> -->
+            <div class="history-list" id="history-list">
+                <div class="no-history">Chưa có lịch sử quay thưởng.</div>
+            </div>
+        </div>
+
+        <!-- Banner Inner Confetti Canvas -->
+        <canvas id="banner-confetti"></canvas>
+    </div>
+
+    <!-- Win Reward Modal Overlay (Sleek & Interactive) -->
+    <div class="modal-backdrop" id="reward-modal">
+        <div class="modal-card">
+            <div class="modal-ribbon" id="modal-ribbon">CHÚC MỪNG!</div>
+            <div class="modal-body">
+                <!-- Step 1: Reveal Prize -->
+                <div class="modal-step active" id="step-reveal">
+                    <h3>Bạn Đã Trúng:</h3>
+                    <div class="prize-display">
+                        <div class="prize-name" id="modal-prize-name">1 Hộp Kem Fanny 475ml</div>
+                    </div>
+                    <button class="primary-btn" id="go-to-claim">Nhận Quà Ngay</button>
+                    <button class="text-link-btn" id="close-modal-1">Bỏ qua</button>
+                </div>
+
+                <!-- Step 2: Claim Form -->
+                <div class="modal-step" id="step-form">
+                    <h3>Nhập Thông Tin</h3>
+                    <div class="form-container">
+                        <div class="input-group">
+                            <input type="text" id="claim-name" placeholder="Họ và tên..." autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <input type="tel" id="claim-phone" placeholder="Số điện thoại..." autocomplete="off">
+                        </div>
+                        <div class="error-msg" id="claim-error">Vui lòng điền đầy đủ thông tin</div>
+                    </div>
+                    <button class="primary-btn" id="submit-claim">Xác Nhận</button>
+                    <button class="text-link-btn" id="go-back-reveal">Quay Lại</button>
+                </div>
+
+                <!-- Step 3: Success Screen -->
+                <div class="modal-step" id="step-success">
+                    <div class="success-icon-wrapper">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h3 style="margin-top: 8px; margin-bottom: 8px;">Đăng Ký Thành Công!</h3>
+                    <p class="success-desc">Mã quà tặng của bạn:</p>
+                    <div class="claim-code" id="success-code">FN-12345</div>
+                    <p class="success-note">Vui lòng lưu lại mã này. Fanny sẽ liên hệ sớm nhất để trao quà.</p>
+                    <button class="primary-btn" id="close-modal-success">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
